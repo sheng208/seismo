@@ -1,0 +1,55 @@
+\documentclass{beamer}
+\usepackage{xeCJK}
+\usefonttheme[onlymath]{serif}
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+% 本模板用于组会每周地震节目，排版效果尚不完美，在持续发展中
+
+\begin{document}
+	
+	\begin{frame}
+		
+		\title{每周地震}
+		\author{ssc}
+		\date{\today}
+		
+		\titlepage
+		
+	\end{frame}
+
+% 该页的初衷是排版台站分布图，与align到P波的Z剖面
+	\begin{frame}
+		
+		\begin{minipage}[c]{0.46\linewidth}
+			\begin{figure}
+				\includegraphics[width=\linewidth]{} % 你应该补上台站分布图文件路径
+			\end{figure}
+		\end{minipage}\hspace{0.5cm}
+		\begin{minipage}[c]{0.46\linewidth}
+			\begin{figure}
+				\includegraphics[height=0.79\textheight]{} % 你应该补上P波Z剖面图文件路径
+			\end{figure}					
+		\end{minipage}
+		
+	\end{frame}
+
+	
+	\begin{frame}
+		
+		\begin{figure}[htbp]
+			
+			\centering
+			\includegraphics[height=0.79\textheight]{} % 你应该补上S波R剖面图文件路径
+			\includegraphics[height=0.79\textheight]{} % 你应该补上S波T剖面图文件路径
+			
+		\end{figure}
+		
+	\end{frame}
+
+% 以下排版，推荐以上面两个beamer为单位
+
+
+	
+	
+\end{document}
