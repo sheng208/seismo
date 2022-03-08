@@ -4,7 +4,7 @@ import os
 import glob
 import subprocess
 
-# 服务于从国家台网下载的数据重命名
+# renaming data for national network downloads
 
 for fname in glob.glob("*.SAC"):
     sections = fname.split('.')
