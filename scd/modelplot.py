@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/home/sheng/miniconda3/envs/seispy/bin/python
 
 import matplotlib.pyplot as plt
 
