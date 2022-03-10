@@ -107,6 +107,9 @@ for fname in fnames:
 if re.search('s1', align):
     tlabel = '-T+t3'    # changed with command line
     xlabel = '\"Time [s] aligned on S true\"'
+elif re.search('s', align):
+    tlabel = '-T+t2'
+    xlabel = '\"Time [s] aligned on S\"'
 
 ymin = float(gcmin) - 1
 ymax = float(gcmax) + 1
