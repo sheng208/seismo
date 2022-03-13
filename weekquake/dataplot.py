@@ -149,7 +149,7 @@ else:
         exit("min_time " + time_min + " has to be smaller than max_time " + time_max)
 
 if not(opt_dict['-M']):
-    exit("Specify scale -M")
+    sys.exit('No option -M!')
 else:
     scale = opt_dict['-M']
 
@@ -274,7 +274,7 @@ OUT_FILE_PRENAME = comp + '.' + OUT_FILE_PRENAME
 
 j_label = '-JX14c/21c'
 r_label = '-R' + str(time_min) + '/' + str(time_max) + '/' + str(Rmin) + '/' + str(Rmax)
-m_label = '-M' + scale + 'c'
+m_label = '-M%s' % scale
 
 
 
@@ -285,11 +285,13 @@ gmtcmd += 'gmt begin ' + OUT_FILE_PRENAME + ' pdf\n'
 
 gmtcmd += 'gmt basemap ' + j_label + ' ' + r_label + ' ' + b_label + '\n'
 for used_data_file in used_data_files:
-    gmtcmd += 'gmt sac ' + used_data_file + ' ' + t_label + ' ' + cut_option + ' ' + m_label + ' -Ed -W0.5p,black\n'
-    cmd_saclst = 'saclst knetwk kstnm az gcarc f ' + used_data_file
+    gmtcmd += 'gmt sac %s %s %s %s -Ed -W0.5p,black\n' \
+        % (used_data_file, t_label, cut_option, m_label)
+    cmd_saclst = 'saclst knetwk kstnm az gcarc f %s' % used_data_file
     junk, netwk, station, az, gcarc = subprocess.getoutput(cmd_saclst).split()
     az = '%.1f' % float(az)
-    gmtcmd += 'echo ' + str(x) + ' ' + gcarc + ' ' + netwk + '.' + station + ' ' + az + ' | gmt text -F+f8p,6,black+a0+jML -N\n'
+    gmtcmd += 'echo %s %s %s %s %s | gmt text -F+f8p,6,black+a0+jML -N\n' \
+        % (str(x), gcarc, netwk, station, az)
 
 # while mark the SKS and ScS
 if opt_dict['-S']:
@@ -298,18 +300,22 @@ if opt_dict['-S']:
         gcarc = float(gcarc_min)
         echo_gmt = ''
         while gcarc >= float(gcarc_min) and gcarc <= float(gcarc_max):
-            cmdtaup = 'taup time -mod prem -h %s -deg %f -ph S --time' % (evdp, gcarc)
+            cmdtaup = 'taup time -mod prem -h %s -deg %f -ph S --time' \
+                % (evdp, gcarc)
             Sarivlt = subprocess.getoutput(cmdtaup).split()
-            cmdtaup = 'taup time -mod prem -h %s -deg %f -ph Sdiff --time' % (evdp, gcarc)
+            cmdtaup = 'taup time -mod prem -h %s -deg %f -ph Sdiff --time' \
+                % (evdp, gcarc)
             Sdiffarivlt = subprocess.getoutput(cmdtaup).split()
             if Sarivlt:
-                cmdtaup = 'taup time -mod prem -h %s -deg %f -ph %s --time' % (evdp, gcarc, phase)
+                cmdtaup = 'taup time -mod prem -h %s -deg %f -ph %s --time' \
+                    % (evdp, gcarc, phase)
                 pharivlt = subprocess.getoutput(cmdtaup).split()
                 if pharivlt:
                     ph_align_S = float(pharivlt[0]) - float(Sarivlt[0])
                     echo_gmt += '%f %f\n' % (ph_align_S, gcarc)
             elif Sdiffarivlt:
-                cmdtaup = 'taup time -mod prem -h %s -deg %f -ph %s --time' % (evdp, gcarc, phase)
+                cmdtaup = 'taup time -mod prem -h %s -deg %f -ph %s --time' \
+                    % (evdp, gcarc, phase)
                 pharivlt = subprocess.getoutput(cmdtaup).split()
                 if pharivlt:
                     ph_align_Sdiff = float(pharivlt[0]) - float(Sdiffarivlt[0])
@@ -319,18 +325,25 @@ if opt_dict['-S']:
         gmtcmd += 'echo "%s" | gmt plot -W1p,red,-\n' % echo_gmt
 
 h = (float(time_min) + float(time_max))*0.5
-gmtcmd += 'echo ' + str(h) + ' ' + gcarc_max + ' ' + comp + ' ' + 'Az = ' + az_min + '~' + az_max + ' deg.' + ' Delta = ' + gcarc_min + '~' + gcarc_max + ' deg.' + ' | gmt text -F+f12p,6,black+a0+jMC -D0c/0.7c -N\n'
-gmtcmd += 'echo ' + str(h) + ' ' + gcarc_max + ' ' + nzyear + ' ' + nzjday + ', ' + 'lat = ' + evla + ', lon = ' + evlo + ', depth = ' + evdp + ' | gmt text -F+f10p,6,black+a0+jMC -D0c/1.2c -N\n'
-gmtcmd += 'echo \"0 ' + gcarc_min + '\n0 ' + gcarc_max + '\" | gmt plot -W1p,red,-\n'
+gmtcmd += 'echo %s %s %s Az = %s~%s deg. Delta = %s~%s deg. | \
+    gmt text -F+f12p,6,black+a0+jMC -D0c/0.7c -N\n' \
+        % (str(h), gcarc_max, comp, az_min, az_max, gcarc_min, gcarc_max)
+gmtcmd += 'echo %s %s %s %s, lat = %s, lon = %s, depth = %s | \
+    gmt text -F+f10p,6,black+a0+jMC -D0c/1.2c -N\n' \
+        % (str(h), gcarc_max, nzyear, nzjday, evla, evlo, evdp)
+gmtcmd += 'echo \"0 %s\n0 %s\" | gmt plot -W1p,red,-\n' \
+    % (gcarc_min, gcarc_max)
 # plot synthetics
 if plot_syn:
     for used_syn_file in used_syn_files:
-        gmtcmd += 'gmt sac ' + used_syn_file + ' ' + t_label + ' ' + cut_option + ' ' + m_label + ' -Ed -W0.5p,red\n'
+        gmtcmd += 'gmt sac %s %s %s %s -Ed -W0.5p,red\n' \
+            % (used_syn_file, t_label, cut_option, m_label)
         if annotation == '1':
             cmdsaclst = 'saclst knetwk kstnm az gcarc f %s' % used_syn_file
             netwk, station, az, gcarc = subprocess.getoutput(cmdsaclst).split()[1:]
             az = '%.1f' % float(az)
-            gmtcmd += 'echo ' + str(x) + ' ' + gcarc + ' ' + netwk + '.' + station + ' ' + az + ' | gmt text -F+f8p,6,red+a0+jML -N\n'
+            gmtcmd += 'echo %s %s %s %s %s | gmt text -F+f8p,6,red+a0+jML -N\n' \
+                % (str(x), gcarc, netwk, station, az)
 
 gmtcmd += 'gmt end show'
 subprocess.Popen(['bash'], stdin=subprocess.PIPE).communicate(gmtcmd.encode())
@@ -345,15 +358,19 @@ if opt_dict['-m']:
     gmtcmd += 'gmt coast -Ggray\n'
     
     if opt_dict['-b']:
-        strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent = opt_dict['-b'].split('/')
-        gmtcmd += 'gmt meca -Sc0.2c -Gred <<EOF\n%s %s %s %s %s %s %s %s %s %s %s\nEOF\n' % (evlo, evla, evdp, strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent)
+        strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent \
+            = opt_dict['-b'].split('/')
+        gmtcmd += 'gmt meca -Sc0.2c -Gred <<EOF\n%s %s %s %s %s %s %s %s %s %s %s\nEOF\n' \
+            % (evlo, evla, evdp, strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent)
     else:
-        gmtcmd += 'echo %s %s | gmt plot -Sa0.2c -W0.5p,red,solid -Gred\n' % (evlo, evla)
+        gmtcmd += 'echo %s %s | gmt plot -Sa0.2c -W0.5p,red,solid -Gred\n' \
+            % (evlo, evla)
     
     for used_data_file in used_data_files:
         cmdsaclst = 'saclst stlo stla f %s' % used_data_file
         stlon, stlat = subprocess.getoutput(cmdsaclst).split()[1:]
-        gmtcmd += 'echo %s %s | gmt plot -St0.06c -W0.5p,blue,solid -Gblue\n' % (stlon, stlat)
+        gmtcmd += 'echo %s %s | gmt plot -St0.06c -W0.5p,blue,solid -Gblue\n' \
+            % (stlon, stlat)
 
     gmtcmd += 'gmt end show'
     subprocess.Popen(['bash'], stdin=subprocess.PIPE).communicate(gmtcmd.encode())
@@ -378,13 +395,15 @@ if opt_dict['-g']:
         cmdsaclst = 'saclst kt2 stlo stla f %s' % used_data_file
         phase, stlon, stlat = subprocess.getoutput(cmdsaclst).split()[1:]
         gmtcmd += 'echo %s %s | gmt plot -St0.15c -W0.5p,brown,solid -Gbrown\n' % (stlon, stlat)
-        cmdtaup = 'taup_pierce -ph %s -mod prem -h %s -evt %s %s -sta %s %s -turn' % (phase, evdp, evla, evlo, stlat, stlon)
+        cmdtaup = 'taup_pierce -ph %s -mod prem -h %s -evt %s %s -sta %s %s -turn' \
+            % (phase, evdp, evla, evlo, stlat, stlon)
         turnlat, turnlon = subprocess.getoutput(cmdtaup).split()[-2:]
         gmtcmd += 'echo %s %s | gmt plot -Sc0.15c -W0.5p,brown,solid\n' % (turnlon, turnlat)
         print(used_data_file, turnlat, turnlon)
     if opt_dict['-b']:
         strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent = opt_dict['-b'].split('/')
-        gmtcmd += 'gmt meca -Sc0.2c -Gred <<EOF\n%s %s %s %s %s %s %s %s %s %s %s\nEOF\n' % (evlo, evla, evdp, strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent)
+        gmtcmd += 'gmt meca -Sc0.2c -Gred <<EOF\n%s %s %s %s %s %s %s %s %s %s %s\nEOF\n' \
+            % (evlo, evla, evdp, strike1, dip1, rake1, strike2, dip2, rake2, mantissa, exponent)
     else:
         gmtcmd += 'echo %s %s | gmt plot -Sa0.2c -W0.5p,red,solid -Gred\n' % (evlo, evla)
 

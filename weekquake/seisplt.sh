@@ -14,6 +14,7 @@
 
 #`~/seismo/weekquake/dataplot.py -a p -T -150/250/a50f10 -M 0.6 -G 130/169 -A 225/294 -b 156/83/-2/247/88/-173/5.968/25 -m Europe *.BHZ`
 
+# refer to option '-M' of modulu 'sac' in GMT
 #`~/seismo/weekquake/dataplot.py -a s -T -50/150/a50f10 -M 0.6 -G 59/92 -A 18/41 *.BHT`
 
 #`echo ~/seismo/weekquake/dataplot.py -a s -T -50/150/a50f10 -M 0.6 -G 59/92 -A 18/41 -b 150/35/-128/13/63/-67/4.71/25 -g /home/sheng/GyPSuM/GyPSuM.Grids.1deg.S.P/Grid.GyPSuM.S.22.2650-2900km *.BHT`
