@@ -2,16 +2,6 @@
 
 import math
 
-def Qmu2Qs(Qmu):
-    Qs = Qmu
-    return Qs
-
-def QmuQkapa2Qp(Qmu, Qkapa, Vs, Vp):
-    e = Vs/Vp
-    E = (4.0/3)*math.pow(e, 2)
-    Qp = (Qmu*Qkapa)/((1-E)*Qmu + E*Qkapa)
-    return Qp
-
 def prem(radii):
 
     veless, velesp, rhos = [], [], []
@@ -22,55 +12,34 @@ def prem(radii):
             vels = 3.200
             velp = 5.800
             rho = 2.600
-            #Qmu, Qkapa = 600, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         elif radius <= 6356.0 and radius > 6346.6:
             vels = 3.900
             velp = 6.800
-            rho = 2.600
-            #Qmu, Qkapa = 600, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
+            rho = 2.900
         # There are Ocean in PREM, but we don't consider it here
         # Isotropic LID
         elif radius <= 6346.6 and radius > 6291.0:
             vels = 2.1519 + 2.3481*x
             velp = 4.1875 + 3.9382*x
             rho = 2.6910 + 0.6924*x
-            #Qmu, Qkapa = 600, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         # Isotropic LVZ
         elif radius <= 6291.0 and radius > 6151.0:
             vels = 2.1519 + 2.3481*x
             velp = 4.1875 + 3.9382*x
             rho = 2.6910 + 0.6924*x
-            #Qmu, Qkapa = 80, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         # Transition zone
         elif radius <= 6151.0 and radius > 5971.0:
             vels = 8.9496 - 4.4597*x
             velp = 20.3926 - 12.2569*x
             rho = 7.1089 - 3.8045*x
-            #Qmu, Qkapa = 143, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         elif radius <= 5971.0 and radius > 5771.0:
             vels = 22.3512 - 18.5856*x
             velp = 39.7027 - 32.6166*x
             rho = 11.2494 - 8.0298*x
-            #Qmu, Qkapa = 143, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         elif radius <= 5771.0 and radius > 5701.0:
             vels = 9.9839 - 4.9324*x
             velp = 19.0957 - 9.8672*x
             rho = 5.3197 - 1.4836*x
-            #Qmu, Qkapa = 143, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         # Lower mantle
         elif radius <= 5701.0 and radius > 5600.0:
             vels = 22.3459 - 17.2473*x - 2.0834*math.pow(x, 2) \
@@ -79,9 +48,6 @@ def prem(radii):
                     - 2.5514*math.pow(x, 3)
             rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                     - 3.0807*math.pow(x, 3)
-            #Qmu, Qkapa = 312, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         elif radius <= 5600.0 and radius > 3630.0:
             vels = 11.1671 - 13.7818*x + 17.4575*math.pow(x, 2) \
                     - 9.2777*math.pow(x, 3)
@@ -89,9 +55,6 @@ def prem(radii):
                     - 26.6419*math.pow(x, 3)
             rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                     - 3.0807*math.pow(x, 3)
-            #Qmu, Qkapa = 312, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         elif radius <= 3630.0 and radius > 3480.0:
             vels = 6.9254 + 1.4672*x - 2.0834*math.pow(x, 2) \
                     + 0.9783*math.pow(x, 3)
@@ -99,9 +62,6 @@ def prem(radii):
                     - 2.5514*math.pow(x, 3)
             rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                     - 3.0807*math.pow(x, 3)
-            #Qmu, Qkapa = 312, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         # Outer core
         elif radius <= 3480.0 and radius > 1221.5:
             vels = 0
@@ -109,17 +69,11 @@ def prem(radii):
                     - 13.5732*math.pow(x, 3)
             rho = 12.5815 - 1.2638*x - 3.6426*math.pow(x, 2) \
                     - 5.5281*math.pow(x, 3)
-            #Qmu, Qkapa = 1.0e+10, 57823
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         # Inner core
         elif radius <= 1221.5 and radius > 0:
             vels = 3.6678 - 4.4475*math.pow(x, 2)
             velp = 11.2622 - 6.3640*math.pow(x, 2)
             rho = 13.0885 - 8.8381*math.pow(x, 2)
-            #Qmu, Qkapa = 84.6, 1327.7
-            #Qs = Qmu2Qs(Qmu)
-            #Qp = QmuQkapa2Qp(Qmu, Qkapa, vels, velp)
         veless.append(vels)
         velesp.append(velp)
         rhos.append(rho)
@@ -158,16 +112,15 @@ def layers():
     for i in range(6):
         thicks.append(20)
     # Outer core
-    #thicks.append(2258.5)
-    #thicks.append(18.5)
-    #for i in range(112):
-    #    thicks.append(20)
+    thicks.append(18.5)
+    for i in range(50):
+        thicks.append(20)
+    thicks.append(1240)
     # Inner core
-    #thicks.append(1221.5)
+    thicks.append(1221.5)
     #thicks.append(21.5)
     #for i in range(60):
     #    thicks.append(20)
-    thicks.append(3480.0)
 
     return thicks
 
@@ -187,10 +140,10 @@ veless, velesp, rhos = prem(radii)
 thicks[0] += 24.4
 
 # Creating a model for 'fk'
-fo = open('prem3', 'w')
+fo = open('prem', 'w')
 for i in range(len(thicks)):
-    element = "%6.2f %6.3f %6.3f %6.3f\n" % (thicks[i], veless[i], \
-        velesp[i], rhos[i])
+    element = "%6.2f %6.3f %6.3f %6.3f\n" \
+        % (thicks[i], veless[i], velesp[i], rhos[i])
     fo.write(element)
 fo.close()
 print(r)

@@ -11,41 +11,34 @@ def prem(radius):
         vels = 3.200
         velp = 5.800
         rho = 2.600
-    
     elif radius <= 6356.0 and radius > 6346.6:
         vels = 3.900
         velp = 6.800
-        rho = 2.600
-    
+        rho = 2.900
     # There are Ocean in PREM, but we don't consider it here
     # Isotropic LID
     elif radius <= 6346.6 and radius > 6291.0:
         vels = 2.1519 + 2.3481*x
         velp = 4.1875 + 3.9382*x
         rho = 2.6910 + 0.6924*x
-    
     # Isotropic LVZ
     elif radius <= 6291.0 and radius > 6151.0:
         vels = 2.1519 + 2.3481*x
         velp = 4.1875 + 3.9382*x
         rho = 2.6910 + 0.6924*x
-    
     # Transition zone
     elif radius <= 6151.0 and radius > 5971.0:
         vels = 8.9496 - 4.4597*x
         velp = 20.3926 - 12.2569*x
         rho = 7.1089 - 3.8045*x
-    
     elif radius <= 5971.0 and radius > 5771.0:
         vels = 22.3512 - 18.5856*x
         velp = 39.7027 - 32.6166*x
         rho = 11.2494 - 8.0298*x
-    
     elif radius <= 5771.0 and radius > 5701.0:
         vels = 9.9839 - 4.9324*x
         velp = 19.0957 - 9.8672*x
         rho = 5.3197 - 1.4836*x
-    
     # Lower mantle
     elif radius <= 5701.0 and radius > 5600.0:
         vels = 22.3459 - 17.2473*x - 2.0834*math.pow(x, 2) \
@@ -54,7 +47,6 @@ def prem(radius):
                 - 2.5514*math.pow(x, 3)
         rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                 - 3.0807*math.pow(x, 3)
-    
     elif radius <= 5600.0 and radius > 3630.0:
         vels = 11.1671 - 13.7818*x + 17.4575*math.pow(x, 2) \
                 - 9.2777*math.pow(x, 3)
@@ -62,7 +54,6 @@ def prem(radius):
                 - 26.6419*math.pow(x, 3)
         rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                 - 3.0807*math.pow(x, 3)
-    
     elif radius <= 3630.0 and radius > 3480.0:
         vels = 6.9254 + 1.4672*x - 2.0834*math.pow(x, 2) \
                 + 0.9783*math.pow(x, 3)
@@ -70,7 +61,6 @@ def prem(radius):
                 - 2.5514*math.pow(x, 3)
         rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                 - 3.0807*math.pow(x, 3)
-    
     # Outer core
     elif radius <= 3480.0 and radius > 1221.5:
         vels = 0
@@ -78,13 +68,11 @@ def prem(radius):
                 - 13.5732*math.pow(x, 3)
         rho = 12.5815 - 1.2638*x - 3.6426*math.pow(x, 2) \
                 - 5.5281*math.pow(x, 3)
-    
     # Inner core
     elif radius <= 1221.5 and radius > 0:
         vels = 3.6678 - 4.4475*math.pow(x, 2)
         velp = 11.2622 - 6.3640*math.pow(x, 2)
         rho = 13.0885 - 8.8381*math.pow(x, 2)
-
     return vels
 
 # five parameters describing D" layer
@@ -98,41 +86,34 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
             vels = 3.200
             velp = 5.800
             rho = 2.600
-        
         elif radius <= 6356.0 and radius > 6346.6:
             vels = 3.900
             velp = 6.800
-            rho = 2.600
-        
+            rho = 2.900
         # There are Ocean in PREM, but we don't consider it here
         # Isotropic LID
         elif radius <= 6346.6 and radius > 6291.0:
             vels = 2.1519 + 2.3481*x
             velp = 4.1875 + 3.9382*x
             rho = 2.6910 + 0.6924*x
-        
         # Isotropic LVZ
         elif radius <= 6291.0 and radius > 6151.0:
             vels = 2.1519 + 2.3481*x
             velp = 4.1875 + 3.9382*x
             rho = 2.6910 + 0.6924*x
-        
         # Transition zone
         elif radius <= 6151.0 and radius > 5971.0:
             vels = 8.9496 - 4.4597*x
             velp = 20.3926 - 12.2569*x
             rho = 7.1089 - 3.8045*x
-
         elif radius <= 5971.0 and radius > 5771.0:
             vels = 22.3512 - 18.5856*x
             velp = 39.7027 - 32.6166*x
             rho = 11.2494 - 8.0298*x
-        
         elif radius <= 5771.0 and radius > 5701.0:
             vels = 9.9839 - 4.9324*x
             velp = 19.0957 - 9.8672*x
             rho = 5.3197 - 1.4836*x
-        
         # Lower mantle
         elif radius <= 5701.0 and radius > 5600.0:
             vels = 22.3459 - 17.2473*x - 2.0834*math.pow(x, 2) \
@@ -141,7 +122,6 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
                     - 2.5514*math.pow(x, 3)
             rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                     - 3.0807*math.pow(x, 3)
-        
         elif radius <= 5600.0 and radius > 3630.0:
             vels = 11.1671 - 13.7818*x + 17.4575*math.pow(x, 2) \
                     - 9.2777*math.pow(x, 3)
@@ -149,7 +129,6 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
                     - 26.6419*math.pow(x, 3)
             rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                     - 3.0807*math.pow(x, 3)
-        
         elif radius <= 3630.0 and radius > 3480.0:
             vels = 6.9254 + 1.4672*x - 2.0834*math.pow(x, 2) \
                     + 0.9783*math.pow(x, 3)
@@ -157,7 +136,6 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
                     - 2.5514*math.pow(x, 3)
             rho = 7.9565 - 6.4761*x + 5.5283*math.pow(x, 2) \
                     - 3.0807*math.pow(x, 3)
-        
         # Outer core
         elif radius <= 3480.0 and radius > 1221.5:
             vels = 0
@@ -165,13 +143,11 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
                     - 13.5732*math.pow(x, 3)
             rho = 12.5815 - 1.2638*x - 3.6426*math.pow(x, 2) \
                     - 5.5281*math.pow(x, 3)
-        
         # Inner core
         elif radius <= 1221.5 and radius > 0:
             vels = 3.6678 - 4.4475*math.pow(x, 2)
             velp = 11.2622 - 6.3640*math.pow(x, 2)
             rho = 13.0885 - 8.8381*math.pow(x, 2)
-
         # velocity between D" layer and low velocity zone above
         if H_LV:
             # interface in D"
@@ -183,7 +159,6 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
             Vs_D_0 = prem(r_D_0)
             Vs_D_1 = Vs_lv
             Vs_D_2 = Vs_D_1*(1 + d_Vs)
-            Vs_D_3 = Vs_cmb
             # different shear velocity from PREM
             if radius <= r_D_0 and radius > r_D_1:
                 vels = Vs_D_1 + (radius - r_D_1)*(Vs_D_0 - Vs_D_1)/H_LV
@@ -193,7 +168,7 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
                 vels = Vs_D_2
             elif radius <= r_D_3 and radius > 3480.0:
                 vels = ((radius - 3480.0)*(Vs_D_2 - Vs_cmb)) / H_BL \
-                    + Vs_D_3
+                    + Vs_cmb
         else:
             r_D_1 = 3480.0 + H_D
             Vs_D_1 = prem(r_D_1)
@@ -216,7 +191,7 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
     return veless, velesp, rhos
 
 
-def layers(H_D, H_TL, H_BL):
+def layers(H_D, H_TL, H_BL, H_LV):
 
     # defining thickness of every layer
     thicks = []
@@ -243,9 +218,12 @@ def layers(H_D, H_TL, H_BL):
     for i in range(4):
         thicks.append(20)
 
-    # layers above D"
-    depth = (150 + 1970 - H_D) / 100
+    depth = (150 + 1970 - H_D - H_LV) / 100
     for i in range(100):
+        thicks.append(depth)
+    # low velocity zone or gradual increase above D"
+    depth = H_LV / 50
+    for i in range(50):
         thicks.append(depth)
     # top layer in D"
     if H_TL:
@@ -254,25 +232,24 @@ def layers(H_D, H_TL, H_BL):
             thicks.append(depth)
         #thicks.append(H_TL)
     # mid layer in D"
-    depth = (H_D - H_TL - H_BL) / 20
-    for i in range(20):
+    depth = (H_D - H_TL - H_BL) / 10
+    for i in range(10):
         thicks.append(depth)
     # bottom layer in D"
-    depth = H_BL / 10
-    for i in range(10):
+    depth = H_BL / 20
+    for i in range(20):
         thicks.append(depth)
     
     # Outer core
-    #thicks.append(2258.5)
-    #thicks.append(18.5)
-    #for i in range(112):
-    #    thicks.append(20)
+    thicks.append(18.5)
+    for i in range(50):
+        thicks.append(20)
+    thicks.append(1240)
     # Inner core
-    #thicks.append(1221.5)
+    thicks.append(1221.5)
     #thicks.append(21.5)
     #for i in range(60):
     #    thicks.append(20)
-    thicks.append(3480.0)
 
     return thicks
 
@@ -281,7 +258,7 @@ H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv = 240, 0, 0.03, 200, 7.08, 351, 7.06
 
 # Obtain a list for radius
 radii = []
-thicks = layers(H_D, H_TL, H_BL)
+thicks = layers(H_D, H_TL, H_BL, H_LV)
 radius = 6371.0 - 24.4
 r = 24.4
 for thick in thicks:
@@ -296,8 +273,8 @@ thicks[0] += 24.4
 # Creating a model for 'fk'
 fo = open('model01', 'w')
 for i in range(len(thicks)):
-    element = "%6.2f %6.3f %6.3f %6.3f\n" % (thicks[i], veless[i], \
-        velesp[i], rhos[i])
+    element = "%6.2f %6.3f %6.3f %6.3f\n" \
+        % (thicks[i], veless[i], velesp[i], rhos[i])
     fo.write(element)
 fo.close()
 print(r)
