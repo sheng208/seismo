@@ -54,6 +54,6 @@ fk中的dt推荐0.5，可以信服看到更多的东西；
 # ~/seismo/scd/vsplot.py -a s1 -G 64/90/0.5 -T -50/150/a50f10 -M 0.6 -e 7.26/124.05/492.4 -t 2020/214 -s ./model200_plot,model200_492.4_,t -E ./model300_plot,model300_492.4,t -o 200_300_t
 
 
-# ~/seismo/scd/vsplot.py -a s1 -G 64/90/0.5 -T -50/150/a50f10 -M 0.6 -e 7.26/124.05/492.4 -t 2020/214 -s ./model01_syn,model01_492.4_,t -E ./sac1,,_BHT -o 240_0_3_T
+# ../vsplot.py -a s1 -G 64/90/0.5 -T -30/100/a50f10 -M 0.6 -e 7.26/124.05/492.4 -t 2020/214 -s ./model01syn,model01_492.4_,t -E ./sac,,_BHT -o model
 
 ### Record

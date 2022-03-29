@@ -76,7 +76,8 @@ def prem(radius):
     return vels
 
 # five parameters describing D" layer
-def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
+def model(radii, H_D, H_TL, d_Vs, H_BL, d_Vs_cmb, \
+    H_LV, d_Vs_lv, H_HV, HV_top, d_Vs_hv):
     veless, velesp, rhos = [], [], []
     for radius in radii:
 
@@ -149,7 +150,43 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
             velp = 11.2622 - 6.3640*math.pow(x, 2)
             rho = 13.0885 - 8.8381*math.pow(x, 2)
         # velocity between D" layer and low velocity zone above
-        if H_LV:
+        if H_HV:
+            # interface in D"
+            r_D_0 = 3480.0 + H_D + H_LV + H_HV
+            r_D_1 = 3480.0 + H_D + H_LV + H_HV - HV_top
+            r_D_2 = 3480.0 + H_D + H_LV
+            r_D_3 = 3480.0 + H_D
+            r_D_4 = 3480.0 + H_D - H_TL
+            r_D_5 = 3480.0 + H_BL
+            # corresponding shear velocity
+            Vs_D_0 = prem(r_D_0)
+            Vs_D_1 = Vs_D_0*(1 + d_Vs_hv)
+            Vs_D_2 = Vs_D_1
+            Vs_D_3 = Vs_D_2*(1 + d_Vs_lv)
+            Vs_D_4 = Vs_D_3*(1 + d_Vs)
+            Vs_D_5 = Vs_D_4
+            Vs_D_6 = Vs_D_5*(1 + d_Vs_cmb)
+            # different shear velocity from PREM
+            if radius <= r_D_0 and radius > r_D_1:
+                vels = (radius - r_D_0)*(Vs_D_0 - Vs_D_1)/HV_top \
+                    + Vs_D_0
+            elif radius <= r_D_1 and radius > r_D_2:
+                vels = (Vs_D_1 - Vs_D_2)*(radius - r_D_1)/(H_HV - HV_top) \
+                    + Vs_D_1
+            elif radius <= r_D_2 and radius > r_D_3:
+                vels = (radius - r_D_2)*(Vs_D_2 - Vs_D_3)/H_LV \
+                    + Vs_D_2
+            elif radius <= r_D_3 and radius > r_D_4:
+                vels = (radius - r_D_3)*(Vs_D_3 - Vs_D_4)/H_TL \
+                    + Vs_D_3
+            elif radius <= r_D_4 and radius > r_D_5:
+                vels = (radius - r_D_4)*(Vs_D_4 - Vs_D_5)/(H_D - H_TL - H_BL) \
+                    + Vs_D_4
+            elif radius <= r_D_5 and radius > 3480.0:
+                vels = (radius - r_D_5)*(Vs_D_5 - Vs_D_6)/H_BL \
+                    + Vs_D_5
+
+        elif H_LV:
             # interface in D"
             r_D_0 = 3480.0 + H_D + H_LV
             r_D_1 = 3480.0 + H_D
@@ -157,8 +194,9 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
             r_D_3 = 3480.0 + H_BL
             # corresponding shear velocity
             Vs_D_0 = prem(r_D_0)
-            Vs_D_1 = Vs_lv
+            Vs_D_1 = prem(r_D_1)*(1 + d_Vs_lv)
             Vs_D_2 = Vs_D_1*(1 + d_Vs)
+            Vs_D_4 = Vs_D_2*(1 + d_Vs_cmb)
             # different shear velocity from PREM
             if radius <= r_D_0 and radius > r_D_1:
                 vels = Vs_D_1 + (radius - r_D_1)*(Vs_D_0 - Vs_D_1)/H_LV
@@ -167,22 +205,23 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
             elif radius <= r_D_2 and radius > r_D_3:
                 vels = Vs_D_2
             elif radius <= r_D_3 and radius > 3480.0:
-                vels = ((radius - 3480.0)*(Vs_D_2 - Vs_cmb)) / H_BL \
-                    + Vs_cmb
+                vels = ((radius - 3480.0)*(Vs_D_2 - Vs_D_4)) / H_BL \
+                    + Vs_D_4
         else:
             r_D_1 = 3480.0 + H_D
             Vs_D_1 = prem(r_D_1)
             r_D_2 = 3480.0 + H_D - H_TL
             Vs_D_2 = Vs_D_1*(1 + d_Vs)
             r_D_3 = 3480.0 + H_BL
+            Vs_D_4 = Vs_D_2*(1 + d_Vs_cmb)
 
             if radius <= r_D_1 and radius > r_D_2:
                 vels = Vs_D_1 + (r_D_1 - radius)*(Vs_D_2 - Vs_D_1)/H_TL
             elif radius <= r_D_2 and radius > r_D_3:
                 vels = Vs_D_2
             elif radius <= r_D_3 and radius > 3480.0:
-                vels = ((radius - 3480.0)*(Vs_D_2 - Vs_cmb)) / H_BL \
-                    + Vs_cmb
+                vels = ((radius - 3480.0)*(Vs_D_2 - Vs_D_4)) / H_BL \
+                    + Vs_D_4
         
         veless.append(vels)
         velesp.append(velp)
@@ -191,7 +230,7 @@ def model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv):
     return veless, velesp, rhos
 
 
-def layers(H_D, H_TL, H_BL, H_LV):
+def layers(H_D, H_TL, H_BL, H_LV, H_HV, HV_top):
 
     # defining thickness of every layer
     thicks = []
@@ -218,13 +257,22 @@ def layers(H_D, H_TL, H_BL, H_LV):
     for i in range(4):
         thicks.append(20)
 
-    depth = (150 + 1970 - H_D - H_LV) / 100
+    depth = (150 + 1970 - H_D - H_LV - H_HV) / 100
     for i in range(100):
         thicks.append(depth)
+    # High velocity zone above low velocity
+    if H_HV:
+        depth = HV_top / 20
+        for i in range(20):
+            thicks.append(depth)
+        depth = (H_HV - HV_top) / 10
+        for i in range(10):
+            thicks.append(depth)
     # low velocity zone or gradual increase above D"
-    depth = H_LV / 50
-    for i in range(50):
-        thicks.append(depth)
+    if H_LV:
+        depth = H_LV / 40
+        for i in range(40):
+            thicks.append(depth)
     # top layer in D"
     if H_TL:
         depth = H_TL / 10
@@ -232,33 +280,37 @@ def layers(H_D, H_TL, H_BL, H_LV):
             thicks.append(depth)
         #thicks.append(H_TL)
     # mid layer in D"
-    depth = (H_D - H_TL - H_BL) / 10
-    for i in range(10):
+    depth = (H_D - H_TL - H_BL) / 40
+    for i in range(40):
         thicks.append(depth)
     # bottom layer in D"
-    depth = H_BL / 20
-    for i in range(20):
-        thicks.append(depth)
+    if H_BL:
+        depth = H_BL / 20
+        for i in range(20):
+            thicks.append(depth)
     
     # Outer core
-    thicks.append(18.5)
-    for i in range(50):
-        thicks.append(20)
-    thicks.append(1240)
+    #thicks.append(18.5)
+    #for i in range(50):
+    #    thicks.append(20)
+    #thicks.append(1240)
     # Inner core
-    thicks.append(1221.5)
+    #thicks.append(1221.5)
     #thicks.append(21.5)
     #for i in range(60):
     #    thicks.append(20)
+    thicks.append(3480.0)
 
     return thicks
 
 # necessary parameters in D"
-H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv = 240, 0, 0.03, 200, 7.08, 351, 7.06
+H_D, H_TL, d_Vs, H_BL, d_Vs_cmb = 460, 0, 0.03, 300, -0.02
+H_LV, d_Vs_lv  = 300, -0.025
+H_HV, HV_top, d_Vs_hv = 200, 100, 0.01
 
 # Obtain a list for radius
 radii = []
-thicks = layers(H_D, H_TL, H_BL, H_LV)
+thicks = layers(H_D, H_TL, H_BL, H_LV, H_HV, HV_top)
 radius = 6371.0 - 24.4
 r = 24.4
 for thick in thicks:
@@ -267,11 +319,12 @@ for thick in thicks:
     radius -= 0.5*thick
     r += thick
 # Get Vs, Vp
-veless, velesp, rhos = model(radii, H_D, H_TL, d_Vs, H_BL, Vs_cmb, H_LV, Vs_lv)
+veless, velesp, rhos = model(radii, H_D, H_TL, d_Vs, H_BL, d_Vs_cmb, \
+    H_LV, d_Vs_lv, H_HV, HV_top, d_Vs_hv)
 thicks[0] += 24.4
 
 # Creating a model for 'fk'
-fo = open('model01', 'w')
+fo = open('modelz3', 'w')
 for i in range(len(thicks)):
     element = "%6.2f %6.3f %6.3f %6.3f\n" \
         % (thicks[i], veless[i], velesp[i], rhos[i])
